@@ -7,19 +7,16 @@
     <title>MiAPP</title>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-        <!-- chastJS -->
+    <!-- chastJS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-
     <div class="container text-center" style="padding: 0;">
-        
-        <!-- titulo seccion -->
+        <!--------------------------- ENCABEZADO --------------------------->
         <div class="barra-titulo shadow-sm" style="width: 100%; padding-top: 20px; margin-bottom: 20px;">
             <img src="savings.png" alt="">
             <h3 style="color:#fec968">Ahorros</h3>
@@ -27,9 +24,28 @@
 
     </div>
 
-   
-   
-    <!-- NAVBAR INFERIOR -->
+    <!--------------------------- CONTENIDO PRICIPAL --------------------------->
+    <div>
+        <!-- Grafica -->
+        <div style="margin-top: 50px;">
+            <h4 class="text-secondary text-start ms-3">Grafica balance general</h4>
+            <div id="grafica-ahorros"></div>
+        </div>
+
+        <!-- Tabla -->
+        <div style="margin-top: 50px;">
+            <h4 class="text-secondary text-start ms-3 mt-4">Tabla balance general</h4>
+            <div id="tabla-ahorros" style="width: 95%;">
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <!--------------------------- NAVBAR INFERIOR --------------------------->
     <div class="nav-bottom d-flex justify-content-around">
 
         <a href="index.html" class="nav-item-custom">
@@ -60,12 +76,77 @@
     </div>
 
 
-
-
-
+    <script src="data.js"></script>
+    <!-- boostrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+
+    <script>
+function graficaAhorros() {
+    const contenedor = document.getElementById("grafica-ahorros");
+
+    function limpiarMonto(monto) {
+        return Number(monto.replace(/\$/g, "").replace(/\./g, ""));
+    }
+
+    function formatearCOP(valor) {
+        return valor.toLocaleString("es-CO", {
+            style: "currency",
+            currency: "COP",
+            minimumFractionDigits: 0
+        });
+    }
+
+    contenedor.innerHTML = ""; // limpiar
+
+    presupuesto.metasAhorro.forEach((meta, index) => {
+        const metaTotal = limpiarMonto(meta.meta);
+        const avance = limpiarMonto(meta.avance);
+
+        const porcentaje = Math.min((avance / metaTotal) * 100, 100);
+
+        const card = document.createElement("div");
+        card.className = "mb-4";
+
+        card.innerHTML = `
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">${meta.proposito}</h5>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><strong>Meta:</strong> ${formatearCOP(metaTotal)}</span>
+                        <span><strong>Ahorrado:</strong> ${formatearCOP(avance)}</span>
+                    </div>
+
+                    <div class="progress" style="height: 20px;">
+                        <div 
+                            id="barra-${index}"
+                            class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                            role="progressbar"
+                            style="width: 0%"
+                        >
+                            0%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        contenedor.appendChild(card);
+
+        // Animación de carga
+        setTimeout(() => {
+            const barra = document.getElementById(`barra-${index}`);
+            barra.style.width = porcentaje + "%";
+            barra.textContent = porcentaje.toFixed(0) + "%";
+        }, 200);
+    });
+}
+
+graficaAhorros();
+
+    </script>
 </body>
 
 </html>
