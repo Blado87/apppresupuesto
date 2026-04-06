@@ -1,30 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MiAPP</title>
-    <!-- Bootstrap -->
+    <title>ChatIA - MiApp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- chastJS -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <!--------------------- modal ---------------------->
     <div class="modal fade" id="modalIA" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Respuesta</h5>
+                    <h5 class="modal-title">Respuesta de IA</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p id="respuestaIA"></p>
+                    <p id="respuestaIA" class="fw-medium"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
@@ -33,166 +28,90 @@
         </div>
     </div>
 
-
-    <div class="container text-center" style="padding: 0; margin-bottom: 100px;">
-        <!--------------------------- ENCABEZADO --------------------------->
+    <div class="container text-center" style="padding: 0; margin-bottom: 120px;">
         <div class="barra-titulo shadow-sm" style="width: 100%; padding-top: 20px; margin-bottom: 10px;">
-            <img src="ai.png" alt="">
+            <img src="ai.png" alt="AI Logo" style="width: 50px;">
             <h3 style="color: #407093">ChatIA - Asistente Financiero</h3>
         </div>
 
-        <!--------------------------- CONTENIDO PRICIPAL --------------------------->
-        <div>
-            <!-- Grafica -->
-            <div style="margin-top: 10px; display: flex; flex-direction: column; align-items: center;">
-                <div id="preguntas-IA" style="width: 90%;"></div>
+        <div class="p-3">
+            <div class="input-group shadow-sm mb-4">
+                <input type="text" id="inputPreguntaIA" class="form-control" 
+                       placeholder="Hazme una pregunta..." 
+                       value="¿Cómo voy con mi meta de ahorro?">
+                <button class="btn btn-primary" type="button" id="btnPreguntarIA">
+                    <i class="bi bi-chat-dots-fill"></i>
+                </button>
             </div>
 
-
+            <h6 class="text-start mb-3 text-muted">Preguntas frecuentes:</h6>
+            
+            <div id="preguntas-IA">
+                </div>
         </div>
-
-
     </div>
 
-
-
-    <!--------------------------- NAVBAR INFERIOR --------------------------->
     <div class="nav-bottom d-flex justify-content-around">
-
-        <a href="resumen.html" class="nav-item-custom">
-            <i class="bi bi-house"></i>
-            Inicio
-        </a>
-
-        <a href="ingresos.html" class="nav-item-custom">
-            <i class="bi bi-wallet2"></i>
-            Ingresos
-        </a>
-
-        <a href="gastos.html" class="nav-item-custom">
-            <i class="bi bi-bag"></i>
-            Gastos
-        </a>
-
-        <a href="ahorros.html" class="nav-item-custom">
-            <i class="bi bi-piggy-bank"></i>
-            Ahorros
-        </a>
-
-        <a href="#" class="nav-item-custom active">
-            <i class="bi bi-robot"></i>
-            ChatIA
-        </a>
-
+        <a href="resumen.html" class="nav-item-custom"><i class="bi bi-house"></i>Inicio</a>
+        <a href="ingresos.html" class="nav-item-custom"><i class="bi bi-wallet2"></i>Ingresos</a>
+        <a href="gastos.html" class="nav-item-custom"><i class="bi bi-bag"></i>Gastos</a>
+        <a href="ahorros.html" class="nav-item-custom"><i class="bi bi-piggy-bank"></i>Ahorros</a>
+        <a href="#" class="nav-item-custom active"><i class="bi bi-robot"></i>ChatIA</a>
     </div>
 
-
-    <script src="data.js"></script>
-    <!-- boostrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         function chatIA() {
             const contenedor = document.getElementById("preguntas-IA");
+            const btnPreguntar = document.getElementById("btnPreguntarIA");
+            const inputPregunta = document.getElementById("inputPreguntaIA");
+            const textoRespuesta = document.getElementById("respuestaIA");
+            const modalElement = new bootstrap.Modal(document.getElementById('modalIA'));
 
             const opciones = [
-                // ❓ Preguntas
-                {
-                    tipo: "pregunta",
-                    texto: "¿En qué estoy gastando más dinero?",
-                    respuesta: "Actualmente, tus mayores gastos están concentrados en categorías como vivienda y alimentación. Se recomienda revisar estos rubros para optimizar tu presupuesto."
-                },
-                {
-                    tipo: "pregunta",
-                    texto: "¿Estoy ahorrando lo suficiente?",
-                    respuesta: "Tu nivel de ahorro es aceptable, pero podrías aumentarlo reduciendo gastos innecesarios o destinando un porcentaje fijo de tus ingresos."
-                },
-                {
-                    tipo: "pregunta",
-                    texto: "¿Cómo puedo mejorar mi presupuesto?",
-                    respuesta: "Puedes mejorar tu presupuesto estableciendo límites de gasto por categoría y haciendo seguimiento semanal de tus movimientos."
-                },
-                {
-                    tipo: "pregunta",
-                    texto: "¿Cuál es mi balance mensual?",
-                    respuesta: "Tu balance mensual es positivo, lo que indica que estás generando más ingresos que gastos. ¡Vas por buen camino!"
-                },
-                {
-                    tipo: "pregunta",
-                    texto: "¿Qué categoría debería reducir?",
-                    respuesta: "Podrías reducir gastos en entretenimiento o compras no esenciales para mejorar tu capacidad de ahorro."
-                },
-
-                // 💡 Recomendaciones
-                {
-                    tipo: "recomendacion",
-                    texto: "Crea un fondo de emergencia",
-                    respuesta: "Se recomienda ahorrar al menos el equivalente a 3 a 6 meses de tus gastos para imprevistos."
-                },
-                {
-                    tipo: "recomendacion",
-                    texto: "Aplica la regla 50/30/20",
-                    respuesta: "Distribuye tus ingresos en 50% necesidades, 30% deseos y 20% ahorro o inversión."
-                },
-                {
-                    tipo: "recomendacion",
-                    texto: "Reduce gastos hormiga",
-                    respuesta: "Pequeños gastos diarios pueden sumar grandes cantidades al mes. Identifícalos y redúcelos."
-                },
-                {
-                    tipo: "recomendacion",
-                    texto: "Automatiza tu ahorro",
-                    respuesta: "Programa transferencias automáticas a tu cuenta de ahorro para mantener constancia."
-                },
-                {
-                    tipo: "recomendacion",
-                    texto: "Define metas financieras claras",
-                    respuesta: "Tener objetivos concretos te ayudará a mantener disciplina y motivación en tus finanzas."
-                }
+                { tipo: "pregunta", texto: "¿En qué estoy gastando más dinero?", respuesta: "Actualmente, tus mayores gastos están concentrados en categorías como vivienda y alimentación." },
+                { tipo: "pregunta", texto: "¿Estoy ahorrando lo suficiente?", respuesta: "Tu nivel de ahorro es aceptable, pero podrías aumentarlo reduciendo gastos innecesarios." },
+                { tipo: "pregunta", texto: "¿Cómo puedo mejorar mi presupuesto?", respuesta: "Establece límites de gasto por categoría y haz seguimiento semanal de tus movimientos." },
+                { tipo: "recomendacion", texto: "Crea un fondo de emergencia", respuesta: "Se recomienda ahorrar de 3 a 6 meses de tus gastos para imprevistos." },
+                { tipo: "recomendacion", texto: "Reduce gastos hormiga", respuesta: "Pequeños gastos diarios suman grandes cantidades. Identifícalos y redúcelos." }
             ];
 
-            contenedor.innerHTML = `
-
-        <div class="row g-3" id="contenedor-opciones"></div>
-    `;
-
+            // Generar Grilla de tarjetas (Manteniendo tu estilo original)
+            contenedor.innerHTML = `<div class="row g-3" id="contenedor-opciones"></div>`;
             const grid = document.getElementById("contenedor-opciones");
 
-            opciones.forEach((item, index) => {
+            opciones.forEach((item) => {
                 const col = document.createElement("div");
-                col.className = "col-md-6";
-
+                col.className = "col-12 col-md-6 text-start";
                 col.innerHTML = `
-            <div 
-                class="card p-3 h-100 shadow-sm opcion-ia" 
-                style="cursor:pointer; transition:0.3s;"
-                data-index="${index}"
-            >
-                <strong>${item.tipo === "pregunta" ? "❓" : "💡"} ${item.texto}</strong>
-            </div>
-        `;
-
+                    <div class="card p-3 h-100 shadow-sm opcion-ia" style="cursor:pointer; transition:0.3s; border-radius:12px;">
+                        <strong>${item.tipo === "pregunta" ? "❓" : "💡"} ${item.texto}</strong>
+                    </div>
+                `;
+                col.addEventListener('click', () => {
+                    textoRespuesta.textContent = item.respuesta;
+                    modalElement.show();
+                });
                 grid.appendChild(col);
             });
 
-            // Eventos
-            document.querySelectorAll(".opcion-ia").forEach(el => {
-                el.addEventListener("click", function () {
-                    const index = this.getAttribute("data-index");
-                    const data = opciones[index];
-
-                    document.getElementById("respuestaIA").textContent = data.respuesta;
-
-                    const modal = new bootstrap.Modal(document.getElementById("modalIA"));
-                    modal.show();
-                });
+            // Lógica para el botón de pregunta personalizada
+            btnPreguntar.addEventListener('click', () => {
+                const query = inputPregunta.value.toLowerCase();
+                
+                if (query.includes("ahorro")) {
+                    textoRespuesta.textContent = "¡Excelente progreso! Has completado el 65% de tu meta de ahorro este mes. ¡Sigue así!";
+                } else if (query === "") {
+                    textoRespuesta.textContent = "Por favor, escribe una pregunta para poder ayudarte.";
+                } else {
+                    textoRespuesta.textContent = "Analizando tus datos... Tu situación financiera actual es estable, pero recuerda registrar todos tus gastos diarios.";
+                }
+                modalElement.show();
             });
         }
 
-        chatIA();
-
+        document.addEventListener('DOMContentLoaded', chatIA);
     </script>
 </body>
 
