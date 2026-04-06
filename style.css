@@ -1,17 +1,33 @@
-body {
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
+  background-color: #e9ecef; 
+  overflow-y: auto;
 }
 
 
-/* barra de navegacion */
+body {
+  max-width: 480px; 
+  margin: 0 auto; 
+  background: #ffffff;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
 .nav-bottom {
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  max-width: 480px;
   background: #f8f9fa;
   border-top: 1px solid #ddd;
+  z-index: 1000;
 }
 
 .nav-item-custom {
@@ -42,4 +58,16 @@ body {
 .barra-titulo{
     background: #f8f9fa;
     border-bottom: 1px solid #ddd;
+}
+
+@media (max-width: 480px) {
+  body {
+    max-width: 100%;
+    box-shadow: none;
+  }
+  .nav-bottom {
+    left: 0;
+    transform: none;
+    max-width: 100%;
+  }
 }
